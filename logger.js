@@ -1,0 +1,1 @@
+const PGPubSub = require('pg-notify');
