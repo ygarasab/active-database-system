@@ -1,27 +1,40 @@
 version: '2'
 services:
   logger:
-    build: logger
-    command: node .
+    build: ./logger
+    command: nodemon .
     volumes:
       - ./logger:/usr/app/
+      - /usr/app/node_modules
     ports:
       - "5000:5000"
     depends_on:
       - postgres
+    external_links:
+      - postgres
+
   rest:
-    build: rest
-    command: node .
+    build: ./rest
+    command: nodemon .
     volumes:
       - ./rest:/usr/app/
+      - /usr/app/node_modules
     ports:
       - "3000:3000"
     depends_on:
       - postgres
+    external_links:
+      - postgres
+
+    
   postgres:
     image: postgres:9.6.2-alpine
     environment:
-      POSTGRES_USER: me
-      POSTGRES_DB: db4
+      POSTGRES_USER: bd4
+      POSTGRES_DB: bd4
+      POSTGRES_PASSWORD: password
     volumes:
-    - ./sql/tables.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./sql/tables.sql:/docker-entrypoint-initdb.d/1_init.sql
+      - ./sql/triggers.sql:/docker-entrypoint-initdb.d/2_init.sql
+    ports:
+      - '5432:5432'
