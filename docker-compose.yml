@@ -1,0 +1,27 @@
+version: '2'
+services:
+  logger:
+    build: logger
+    command: node .
+    volumes:
+      - ./logger:/usr/app/
+    ports:
+      - "5000:5000"
+    depends_on:
+      - postgres
+  rest:
+    build: rest
+    command: node .
+    volumes:
+      - ./rest:/usr/app/
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+  postgres:
+    image: postgres:9.6.2-alpine
+    environment:
+      POSTGRES_USER: me
+      POSTGRES_DB: db4
+    volumes:
+    - ./sql/tables.sql:/docker-entrypoint-initdb.d/init.sql
